@@ -1,0 +1,19 @@
+{
+  "name": "brasa-case-2021",
+  "version": "1.0.0",
+  "description": "Brasa back-end analyst case: REST api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OtavioPiza/brasa-case-2021.git"
+  },
+  "author": "Otavio Sartorelli de Toledo Piza",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OtavioPiza/brasa-case-2021/issues"
+  },
+  "homepage": "https://github.com/OtavioPiza/brasa-case-2021#readme"
+}
