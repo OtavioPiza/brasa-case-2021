@@ -2,9 +2,9 @@ POST http://localhost:3001/api/users
 Content-Type: application/json
 
 {
-  "Password": "hxsapntsy",
-  "First Name": "João Gabriel",
-  "Last Name": "Senger",
-  "Email": "joão_gabriel.senger@email.com",
-  "Age": 18
+  "password": "hxsapntsy",
+  "first_name": "João Gabriel",
+  "last_name": "Senger",
+  "email": "joão_gabriel.senger@email.com",
+  "age": 18
 }
