@@ -1,3 +1,5 @@
+require('express-async-errors')
+
 const cors = require('cors')
 
 const mongoose = require('mongoose')

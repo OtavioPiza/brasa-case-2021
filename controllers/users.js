@@ -1,39 +1,30 @@
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 
-usersRouter.get('/', (request, response) => {
-  User.find({}).then(users => {
-    response.json(users)
-  })
+usersRouter.get('/', async (request, response) => {
+  const users = await User.find({})
+  response.json(users)
 })
 
-usersRouter.get('/:email', (request, response) => {
-  User.find({
+usersRouter.get('/:email', async (request, response) => {
+  const users = await User.find({
     email: request.params.email
-  }).then(users => {
-
-    if (users) {
-      response.json(users)
-
-    } else {
-      response.status(404).end()
-    }
-  }).catch(() => {
-    response.status(500).end()
   })
+  if (users) {
+    response.json(users)
+
+  } else {
+    response.status(404).end()
+  }
 })
 
-usersRouter.delete('/:email', (request, response, next) => {
-  User.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+usersRouter.delete('/:email', async (request, response) => {
+  await User.findOneAndDelete({ email: request.params.email })
+  response.status(204).end()
 })
 
-usersRouter.put('/:email', (request, response, next) => {
+usersRouter.put('/:email', async (request, response) => {
   const body = request.body
-
   const user = {
     first_name: body.first_name,
     last_name: body.last_name,
@@ -41,15 +32,11 @@ usersRouter.put('/:email', (request, response, next) => {
     password: body.password,
     age: body.age
   }
-
-  User.findOneAndUpdate({ email: body.email }, user, { new: true})
-    .then(updatedUser => {
-      response.json(updatedUser)
-    })
-    .catch(error => next(error))
+  const updatedUser = await User.findOneAndUpdate({ email: body.email }, user, { new: true })
+  response.json(updatedUser)
 })
 
-usersRouter.post('/', (request, response, next) => {
+usersRouter.post('/', async (request, response) => {
   const body = request.body
 
   if (!body) {
@@ -64,11 +51,8 @@ usersRouter.post('/', (request, response, next) => {
     password: body.password,
     age: body.age
   })
-  user.save()
-    .then(() => {
-      response.json(user)
-    })
-    .catch(error => next(error))
+  const savedUser = await user.save()
+  response.json(savedUser)
 })
 
 module.exports = usersRouter
