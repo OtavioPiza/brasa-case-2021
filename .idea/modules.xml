@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/brasa-case-2021.iml" filepath="$PROJECT_DIR$/.idea/brasa-case-2021.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../fullstack/fullstack-open-course-backend/.idea/fullstack-open-course-backend.iml" filepath="$PROJECT_DIR$/../fullstack/fullstack-open-course-backend/.idea/fullstack-open-course-backend.iml" />
     </modules>
   </component>
 </project>
