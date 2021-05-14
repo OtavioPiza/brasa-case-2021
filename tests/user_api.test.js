@@ -4,7 +4,7 @@ const helper = require('./test_helper')   // helper functions
 
 const api = require('supertest')(require('../app'))
 
-describe('Two initial users in the database', () => {
+describe('Three initial users in the database', () => {
 
   /**
    * Prepares the db for testing
@@ -27,7 +27,7 @@ describe('Two initial users in the database', () => {
    * Tests the creation of a valid user
    */
   test('valid new user', async () => {
-    const users = await helper.usersInDb()
+    const initialUsers = await helper.usersInDb()
     const newUser = {
       password: 'password',
       first_name: 'new',
@@ -43,8 +43,31 @@ describe('Two initial users in the database', () => {
 
     const finalUsers = await helper.usersInDb()
     const emails = finalUsers.map(user => user.email)
-    expect(finalUsers).toHaveLength(users.length + 1)
+    expect(finalUsers).toHaveLength(initialUsers.length + 1)
     expect(emails).toContain('new@email.com')
+  })
+
+  test('creation fails with a duplicated email', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    const newUser = {
+      email: helper.testUsers[0].email,
+      password: helper.testUsers[0].password,
+      first_name: 'fail',
+      last_name: 'fail',
+      age: -1
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const finalUsers = await helper.usersInDb()
+
+    expect(result.body.error).toContain('`email` to be unique')
+    expect(finalUsers).toHaveLength(initialUsers.length)
   })
 })
 
