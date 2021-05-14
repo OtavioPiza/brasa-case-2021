@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')                  // package used to generate the password hashes
+const process = require('process')                // process
 const jwt = require('jsonwebtoken')               // json web token
 const usersRouter = require('express').Router()   // express router
 const User = require('../models/user')            // mongoose model
