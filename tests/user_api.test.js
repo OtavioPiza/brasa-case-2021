@@ -73,6 +73,21 @@ describe('Three initial users in the database', () => {
     expect(finalUsers).toHaveLength(initialUsers.length)
   })
 
+  /**
+   * Test getting all users
+   */
+  test('getting all users', async () => {
+    const result = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body).toHaveLength(helper.testUsers.length)
+  })
+
+  /**
+   * Tests getting an valid user
+   */
   test('getting valid user', async () => {
     const result = await api
       .get(`/api/users/${helper.testUsers[0].email}`)
@@ -86,6 +101,15 @@ describe('Three initial users in the database', () => {
     expect(result.body.age)
     expect(result.body.id)
     expect(result.body.password_hash === undefined)
+  })
+
+  /**
+   * Tests getting an invalid user
+   */
+  test('getting invalid user', async () => {
+    await api
+      .get(`/api/users/${helper.testUsers[0].email.concat('invalid')}`)
+      .expect(404)
   })
 })
 
