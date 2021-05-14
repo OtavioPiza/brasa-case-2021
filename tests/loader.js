@@ -33,6 +33,7 @@ mongoose.connect(process.argv[2], {
       console.log(savedUser)
     })
 
+    return NaN
   })
   .catch((error) => {
     console.error('error connecting to MongoDB', error.message)

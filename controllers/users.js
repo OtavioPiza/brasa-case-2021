@@ -35,7 +35,7 @@ usersRouter.get('/:email', async (request, response) => {
   const users = await User.find({
     email: request.params.email
   })
-  if (users) {
+  if (users.length > 0) {
     response.json(users[0])
 
     if (users.length > 1) {
