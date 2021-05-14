@@ -1,7 +1,23 @@
 const bcrypt = require('bcrypt')                  // package used to generate the password hashes
+const jwt = require('jsonwebtoken')               // json web token
 const usersRouter = require('express').Router()   // express router
 const User = require('../models/user')            // mongoose model
-const logger = require('../utils/logger')
+const logger = require('../utils/logger')         // logger util
+
+// == Authorization ================================================================================================= //
+
+const saltRounds = 8  // ~40 hashes per second
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+  return null
+}
+
+// == Routes ======================================================================================================== //
 
 /**
  * Page with all the users
@@ -30,21 +46,50 @@ usersRouter.get('/:email', async (request, response) => {
   }
 })
 
+/**
+ * Deletes a user if they are signed in
+ */
 usersRouter.delete('/:email', async (request, response) => {
-  await User.findOneAndDelete({ email: request.params.email })
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!token || !decodedToken.id === request.body.id) {
+    return response.status(401).json({
+      error: 'token missing or invalid'
+    })
+  }
+  await User.findByIdAndDelete(request.body.id)
   response.status(204).end()
 })
 
+/**
+ * Updates a user's info if they are signed in
+ */
 usersRouter.put('/:email', async (request, response) => {
   const body = request.body
-  const user = {
+
+  if (!body) {
+    return response.status(400).json({
+      error: 'content missing'
+    })
+  }
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
+
+  if (!token || !decodedToken.id === body.id) {
+    return response.status(401).json({
+      error: 'token missing or invalid'
+    })
+  }
+  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+  const newUser = new User({
     first_name: body.first_name,
     last_name: body.last_name,
     email: body.email,
-    password: body.password,
+    password_hash: passwordHash,
     age: body.age
-  }
-  const updatedUser = await User.findOneAndUpdate({ email: body.email }, user, { new: true })
+  })
+  const updatedUser = await User.findById(body.id, newUser, { new: true })
   response.json(updatedUser)
 })
 
@@ -60,7 +105,6 @@ usersRouter.post('/', async (request, response) => {
     })
   }
 
-  const saltRounds = 8  // ~40 hashes per second
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
   const user = new User({
