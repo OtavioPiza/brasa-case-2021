@@ -12,7 +12,7 @@ loginRouter.post('/', async (request, response) => {
   const user = await User.findOne({ email: body.email })
   const validPassword = user === null
     ? false                                                     // if no user if found we don't waste time
-    : await bcrypt.compare(body.password, user.passwordHash)    // checks with the hash
+    : await bcrypt.compare(body.password, user.password_hash)    // checks with the hash
 
   if (!user || !validPassword) {
     return response.status(401).json({
