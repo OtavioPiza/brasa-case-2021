@@ -46,6 +46,9 @@ describe('Two initial users in the database', () => {
     expect(finalUsers).toHaveLength(users.length + 1)
     expect(emails).toContain('new@email.com')
   })
+})
 
-
+afterAll(async () => {
+  await User.deleteMany({})
+  await mongoose.connection.close()
 })
