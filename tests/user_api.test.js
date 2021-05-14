@@ -111,6 +111,19 @@ describe('Three initial users in the database', () => {
       .get(`/api/users/${helper.testUsers[0].email.concat('invalid')}`)
       .expect(404)
   })
+
+  test('valid login', async () => {
+    const result = await api
+      .post('/api/login')
+      .send({
+        email: helper.testUsers[0].email,
+        password: helper.testUsers[0].password
+      })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.token !== undefined)
+  })
 })
 
 afterAll(async () => {
