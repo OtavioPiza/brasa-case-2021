@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 
@@ -44,11 +45,15 @@ usersRouter.post('/', async (request, response) => {
       error: 'content missing'
     })
   }
+
+  const saltRounds = 8
+  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+
   const user = new User({
     first_name: body.first_name,
     last_name: body.last_name,
     email: body.email,
-    password: body.password,
+    password_hash: passwordHash,
     age: body.age
   })
   const savedUser = await user.save()
