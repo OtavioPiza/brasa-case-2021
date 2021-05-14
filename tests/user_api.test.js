@@ -47,6 +47,9 @@ describe('Three initial users in the database', () => {
     expect(emails).toContain('new@email.com')
   })
 
+  /**
+   * Test the creation of an invalid user
+   */
   test('creation fails with a duplicated email', async () => {
     const initialUsers = await helper.usersInDb()
 
@@ -68,6 +71,21 @@ describe('Three initial users in the database', () => {
 
     expect(result.body.error).toContain('`email` to be unique')
     expect(finalUsers).toHaveLength(initialUsers.length)
+  })
+
+  test('getting valid user', async () => {
+    const result = await api
+      .get(`/api/users/${helper.testUsers[0].email}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(result.body.email).toEqual(helper.testUsers[0].email)
+    expect(result.body.email)
+    expect(result.body.first_name)
+    expect(result.body.last_name)
+    expect(result.body.age)
+    expect(result.body.id)
+    expect(result.body.password_hash === undefined)
   })
 })
 
