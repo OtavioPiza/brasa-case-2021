@@ -4,9 +4,9 @@
   "description": "Brasa back-end analyst case: REST api",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.jsgit ",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.jsgit ",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "lint": "eslint . --fix"
   },
   "repository": {
