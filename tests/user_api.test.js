@@ -12,11 +12,11 @@ describe('Two initial users in the database', () => {
   beforeEach(async () => {
     await User.deleteMany({})
     const userObjects = helper.testUsers.map(user => {
-      const newUser = new User({
+      return new User({
         first_name: user.first_name,
         last_name: user.last_name,
         email: user.email,
-        password_hash: user.passwordHash,
+        password_hash: user.password_hash,
         age: user.age
       })
     })

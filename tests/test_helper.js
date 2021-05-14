@@ -40,7 +40,8 @@ const testUsers = [
  * @returns {Promise<*>}
  */
 const usersInDb = async () => {
-  return (await User.find({}).map(user => user.toJSON()))
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
 }
 
 const doLogin = async (email, password) => {
