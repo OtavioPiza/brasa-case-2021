@@ -1,18 +1,29 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
+const bcrypt = require('bcrypt')                  // package used to generate the password hashes
+const usersRouter = require('express').Router()   // express router
+const User = require('../models/user')            // mongoose model
+const logger = require('../utils/logger')
 
+/**
+ * Page with all the users
+ */
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  let users = await User.find({})
   response.json(users)
 })
 
+/**
+ * Page with a single user's info if one is found
+ */
 usersRouter.get('/:email', async (request, response) => {
   const users = await User.find({
     email: request.params.email
   })
   if (users) {
-    response.json(users)
+    response.json(users[0])
+
+    if (users.length > 1) {
+      logger.error(`Found too many users for the same email:\n${users}`)
+    }
 
   } else {
     response.status(404).end()
@@ -37,6 +48,9 @@ usersRouter.put('/:email', async (request, response) => {
   response.json(updatedUser)
 })
 
+/**
+ * Registers a new user to the database as long as its email is unique
+ */
 usersRouter.post('/', async (request, response) => {
   const body = request.body
 
@@ -46,7 +60,7 @@ usersRouter.post('/', async (request, response) => {
     })
   }
 
-  const saltRounds = 8
+  const saltRounds = 8  // ~40 hashes per second
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
 
   const user = new User({
