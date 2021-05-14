@@ -4,6 +4,7 @@ const cors = require('cors')  // used for cross-origin requests
 
 const config = require('./utils/config')            // loads the config for the server (create a .env)
 const usersRouter = require('./controllers/users')  // routes related to user operation
+const loginRouter = require('./controllers/login')  // routes related to login
 const middleware = require('./utils/middleware')    // middlewares used by the application
 const logger = require('./utils/logger')            // logger used by the application
 
@@ -52,6 +53,11 @@ app.use(middleware.requestLogger)
  * Routes related to user
  */
 app.use('/api/users', usersRouter)
+
+/**
+ * Routes related to login
+ */
+app.use('/api/login', loginRouter)
 
 /**
  * Handles unknown endpoints
