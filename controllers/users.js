@@ -7,7 +7,7 @@ const logger = require('../utils/logger')         // logger util
 
 // == Authorization ================================================================================================= //
 
-const saltRounds = 8  // ~40 hashes per second
+const saltRounds = 5  // ~40 hashes per second
 
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
