@@ -1,3 +1,9 @@
+/**
+ * Controller taking care of all login operations
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const fs = require('fs')
 const mongoose = require('mongoose')
 const User = require('../models/user')

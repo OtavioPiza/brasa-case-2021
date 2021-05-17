@@ -1,3 +1,9 @@
+/**
+ * Controller taking care of all login operations
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const mongoose = require('mongoose')      // mongoose api for operation on the db
 const User = require('../models/user')    // mongoose user model
 const helper = require('./test_helper')   // helper functions

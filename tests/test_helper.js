@@ -1,3 +1,9 @@
+/**
+ * Controller taking care of all login operations
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const User = require('../models/user')  // mongoose user model
 
 const api = require('supertest')(require('../app')) // starts the app for testing
