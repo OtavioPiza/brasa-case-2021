@@ -1,3 +1,9 @@
+/**
+ * Express server application
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 require('express-async-errors')   // used to handle exceptions by automatically calling next
 
 const cors = require('cors')  // used for cross-origin requests
