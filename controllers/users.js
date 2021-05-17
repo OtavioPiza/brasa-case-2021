@@ -77,20 +77,22 @@ usersRouter.put('/', async (request, response) => {
   const token = getTokenFrom(request)
   const decodedToken = jwt.verify(token, process.env.SECRET)
 
+
   if (!token || !decodedToken.id === body.id) {
     return response.status(401).json({
       error: 'token missing or invalid'
     })
   }
   const passwordHash = await bcrypt.hash(body.password, saltRounds)
-  const newUser = new User({
+
+  const user = {
     first_name: body.first_name,
     last_name: body.last_name,
     email: body.email,
     password_hash: passwordHash,
     age: body.age
-  })
-  const updatedUser = await User.findById(body.id, newUser, { new: true })
+  }
+  const updatedUser = (await User.findByIdAndUpdate(decodedToken.id, user, {new: true})).toJSON()
   response.json(updatedUser)
 })
 
