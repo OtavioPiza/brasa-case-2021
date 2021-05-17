@@ -159,7 +159,7 @@ describe('Modifying users', () => {
   test('modification succeeds with valid token and email', async () => {
     const initialUsers = await helper.usersInDb()
     const userToken = (await helper.doLogin(helper.testUsers[0].email, helper.testUsers[0].password)).token
-    const newEmail = 'newemail@email.com'
+    const newEmail = 'new_email@email.com'
 
     const updatedUser = {
       first_name: helper.testUsers[0].first_name,
