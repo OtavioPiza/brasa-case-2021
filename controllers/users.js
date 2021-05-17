@@ -66,7 +66,7 @@ usersRouter.delete('/:email', async (request, response) => {
 /**
  * Updates a user's info if they are signed in
  */
-usersRouter.put('/:email', async (request, response) => {
+usersRouter.put('/', async (request, response) => {
   const body = request.body
 
   if (!body) {
