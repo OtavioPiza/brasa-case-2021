@@ -1,3 +1,9 @@
+/**
+ * Controller taking care of user routes and operations
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const bcrypt = require('bcrypt')                  // package used to generate the password hashes
 const process = require('process')                // process
 const jwt = require('jsonwebtoken')               // json web token
@@ -9,6 +15,12 @@ const logger = require('../utils/logger')         // logger util
 
 const saltRounds = 8  // ~40 hashes per second
 
+/**
+ * Gets the authorization token from a request
+ *
+ * @param request request
+ * @returns {string|null} token
+ */
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
 
@@ -21,7 +33,7 @@ const getTokenFrom = request => {
 // == Routes ======================================================================================================== //
 
 /**
- * Page with all the users
+ * Gets all users in the database
  */
 usersRouter.get('/', async (request, response) => {
   let users = await User.find({})
@@ -29,7 +41,7 @@ usersRouter.get('/', async (request, response) => {
 })
 
 /**
- * Page with a single user's info if one is found
+ * Gets a user with the email from the database if one is found, else sends a 404 response
  */
 usersRouter.get('/:email', async (request, response) => {
   const users = await User.find({
@@ -48,23 +60,32 @@ usersRouter.get('/:email', async (request, response) => {
 })
 
 /**
- * Deletes a user if they are signed in
+ * Registers a new user to the database as long as its email is unique
  */
-usersRouter.delete('/', async (request, response) => {
-  const token = getTokenFrom(request)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
+usersRouter.post('/', async (request, response) => {
+  const body = request.body
 
-  if (!token || !decodedToken.id === request.body.id) {
-    return response.status(401).json({
-      error: 'token missing or invalid'
+  if (!body) {
+    return response.status(400).json({
+      error: 'content missing'
     })
   }
-  await User.findByIdAndDelete(decodedToken.id)
-  response.status(204).end()
+
+  const passwordHash = await bcrypt.hash(body.password, saltRounds)
+
+  const user = new User({
+    first_name: body.first_name,
+    last_name: body.last_name,
+    email: body.email,
+    password_hash: passwordHash,
+    age: body.age
+  })
+  const savedUser = await user.save()
+  response.json(savedUser)
 })
 
 /**
- * Updates a user's info if they are signed in
+ * Updates a user info if they are signed in
  */
 usersRouter.put('/', async (request, response) => {
   const body = request.body
@@ -97,28 +118,19 @@ usersRouter.put('/', async (request, response) => {
 })
 
 /**
- * Registers a new user to the database as long as its email is unique
+ * Deletes a user if they are signed in
  */
-usersRouter.post('/', async (request, response) => {
-  const body = request.body
+usersRouter.delete('/', async (request, response) => {
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
 
-  if (!body) {
-    return response.status(400).json({
-      error: 'content missing'
+  if (!token || !decodedToken.id === request.body.id) {
+    return response.status(401).json({
+      error: 'token missing or invalid'
     })
   }
-
-  const passwordHash = await bcrypt.hash(body.password, saltRounds)
-
-  const user = new User({
-    first_name: body.first_name,
-    last_name: body.last_name,
-    email: body.email,
-    password_hash: passwordHash,
-    age: body.age
-  })
-  const savedUser = await user.save()
-  response.json(savedUser)
+  await User.findByIdAndDelete(decodedToken.id)
+  response.status(204).end()
 })
 
 module.exports = usersRouter
