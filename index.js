@@ -1,3 +1,9 @@
+/**
+ * HTTP web server
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const http = require('http')    // used to create the web-server
 
 const app = require('./app')              // express application
