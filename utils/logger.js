@@ -1,3 +1,9 @@
+/**
+ * Contains the functions for logging server activity
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const process = require('process')
 
 const info = (...params) => {
