@@ -49,8 +49,8 @@ const doLogin = async (email, password) => {
     await api
       .post('/api/login')
       .send({
-        email,
-        password
+        email: email,
+        password: password,
       }))
     .body
 }
