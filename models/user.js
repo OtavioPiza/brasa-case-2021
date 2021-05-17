@@ -1,6 +1,15 @@
+/**
+ * Mongoose model representing a user in the database
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+/**
+ * User schema
+ */
 const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
@@ -25,8 +34,11 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-userSchema.plugin(uniqueValidator)
+userSchema.plugin(uniqueValidator)  // ensures emails have to be unique
 
+/**
+ * overrides toJSON property for security
+ */
 userSchema.set('toJSON', {
   transform: (document, object) => {
     object.id = object._id.toString()
