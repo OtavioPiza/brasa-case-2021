@@ -1,5 +1,5 @@
 /**
- * Controller taking care of all login operations
+ * NodeJS app to load data into the database whose url is passed as an argument
  *
  * @version 2021-05-15
  * @author Otavio Sartorelli de Toledo Piza
@@ -13,7 +13,7 @@ const process = require('process')
 const data = JSON.parse(fs.readFileSync('./data/mock_data.json'))
 
 /**
- * connects to the database specified by config
+ * connects to the database passed as an argument
  */
 mongoose.connect(process.argv[2], {
   useNewUrlParser: true,
