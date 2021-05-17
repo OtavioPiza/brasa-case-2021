@@ -1,5 +1,14 @@
+/**
+ * FIle with the middleware for the server
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const logger = require('./logger')
 
+/**
+ * Logs the requests sent to the server
+ */
 const requestLogger = (request, response, next) => {
   logger.info(`Method:\t${request.method}`)
   logger.info(`Path:\t${request.path}`)
@@ -8,12 +17,18 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+/**
+ * Sends a 404 response if the request if for a non-existing page
+ */
 const unknownEndpoint = (request, response) => {
   response.status(404).send({
     error: 'unknown endpoint'
   })
 }
 
+/**
+ * Handles errors from the server
+ */
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
 
