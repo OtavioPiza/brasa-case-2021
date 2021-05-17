@@ -1,3 +1,9 @@
+/**
+ * Extracts the parameters necessary from the .env file
+ *
+ * @version 2021-05-15
+ * @author Otavio Sartorelli de Toledo Piza
+ */
 const process = require('process')
 
 require('dotenv').config()
