@@ -50,7 +50,7 @@ usersRouter.get('/:email', async (request, response) => {
 /**
  * Deletes a user if they are signed in
  */
-usersRouter.delete('/:email', async (request, response) => {
+usersRouter.delete('/', async (request, response) => {
   const token = getTokenFrom(request)
   const decodedToken = jwt.verify(token, process.env.SECRET)
 
@@ -59,7 +59,7 @@ usersRouter.delete('/:email', async (request, response) => {
       error: 'token missing or invalid'
     })
   }
-  await User.findByIdAndDelete(request.body.id)
+  await User.findByIdAndDelete(decodedToken.id)
   response.status(204).end()
 })
 
