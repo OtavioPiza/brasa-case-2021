@@ -10,8 +10,6 @@ const api = require('supertest')(require('../app')) // starts the app for testin
 
 /**
  * Test users
- *
- * @type {[{password: string, last_name: string, first_name: string, email: string, age: number}, {password: string, last_name: string, first_name: string, email: string, age: number}, {password: string, last_name: string, first_name: string, email: string, age: number}]}
  */
 const testUsers = [
   {
@@ -43,13 +41,20 @@ const testUsers = [
 /**
  * Gets all the users in the database
  *
- * @returns {Promise<*>}
+ * @returns {Promise<*>} users in the database
  */
 const usersInDb = async () => {
   const users = await User.find({})
   return users.map(user => user.toJSON())
 }
 
+/**
+ * Logs a user in
+ *
+ * @param email email of the user
+ * @param password password of the user
+ * @returns {Promise<*>} body of the server's response
+ */
 const doLogin = async (email, password) => {
   return (
     await api
