@@ -238,6 +238,46 @@ describe('Modifying users', () => {
   })
 })
 
+describe('Deleting users', () => {
+
+  /**
+   * Tests deleting a user with a valid token
+   */
+  test('deletion succeeds with valid token', async () => {
+    const initialUsers = await helper.usersInDb()
+    const userToken = (await helper.doLogin(helper.testUsers[0].email, helper.testUsers[0].password)).token
+
+    await api
+        .delete('/api/users')
+        .set({ 'Authorization': `bearer ${userToken}` })
+        .send({
+          id: helper.testUsers[0].id
+        })
+        .expect(204)
+
+    const finalUsers = await helper.usersInDb()
+    expect(finalUsers).toHaveLength(initialUsers.length - 1)
+  })
+
+  /**
+   * Tests deleting a user with an invalid token
+   */
+  test('deletion fails with invalid token', async () => {
+    const initialUsers = await helper.usersInDb()
+
+    await api
+        .delete('/api/users')
+        .set({ 'Authorization': `bearer invalid` })
+        .send({
+          id: helper.testUsers[0].id
+        })
+        .expect(401)
+
+    const finalUsers = await helper.usersInDb()
+    expect(finalUsers).toHaveLength(initialUsers.length)
+  })
+})
+
 afterAll(async () => {
   await User.deleteMany({})
   await mongoose.connection.close()
