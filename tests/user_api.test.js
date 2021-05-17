@@ -70,13 +70,13 @@ describe('Logging in users', () => {
    */
   test('valid login', async () => {
     const result = await api
-        .post('/api/login')
-        .send({
-          email: helper.testUsers[0].email,
-          password: helper.testUsers[0].password
-        })
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+      .post('/api/login')
+      .send({
+        email: helper.testUsers[0].email,
+        password: helper.testUsers[0].password
+      })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
     expect(result.body.token !== undefined)
   })
@@ -86,13 +86,13 @@ describe('Logging in users', () => {
    */
   test('invalid login', async () => {
     const result = await api
-        .post('/api/login')
-        .send({
-          email: helper.testUsers[0].email,
-          password: helper.testUsers[0].password.concat('invalid')
-        })
-        .expect(401)
-        .expect('Content-Type', /application\/json/)
+      .post('/api/login')
+      .send({
+        email: helper.testUsers[0].email,
+        password: helper.testUsers[0].password.concat('invalid')
+      })
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
 
     expect(result.body.error).toContain('invalid')
   })
@@ -113,10 +113,10 @@ describe('Adding users', () => {
       age: 1
     }
     await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+      .post('/api/users')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
     const finalUsers = await helper.usersInDb()
     const emails = finalUsers.map(user => user.email)
@@ -139,10 +139,10 @@ describe('Adding users', () => {
     }
 
     const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
 
     const finalUsers = await helper.usersInDb()
 
@@ -171,11 +171,11 @@ describe('Modifying users', () => {
     }
 
     await api
-        .put('/api/users')
-        .set({ 'Authorization': `bearer ${userToken}` })
-        .send(updatedUser)
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+      .put('/api/users')
+      .set({ 'Authorization': `bearer ${userToken}` })
+      .send(updatedUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
 
     const finalUsers = await helper.usersInDb()
     expect(finalUsers).toHaveLength(initialUsers.length)
@@ -200,10 +200,10 @@ describe('Modifying users', () => {
     }
 
     await api
-        .put('/api/users')
-        .set({ 'Authorization': `bearer ${userToken}` })
-        .send(updatedUser)
-        .expect(400)
+      .put('/api/users')
+      .set({ 'Authorization': `bearer ${userToken}` })
+      .send(updatedUser)
+      .expect(400)
 
     const finalUsers = await helper.usersInDb()
     expect(finalUsers).toHaveLength(initialUsers.length)
@@ -227,10 +227,10 @@ describe('Modifying users', () => {
     }
 
     await api
-        .put('/api/users')
-        .set({ 'Authorization': `bearer invalidtoken` })
-        .send(updatedUser)
-        .expect(401)
+      .put('/api/users')
+      .set({ 'Authorization': 'bearer invalidtoken' })
+      .send(updatedUser)
+      .expect(401)
 
     const finalUsers = await helper.usersInDb()
     expect(finalUsers).toHaveLength(initialUsers.length)
@@ -248,12 +248,12 @@ describe('Deleting users', () => {
     const userToken = (await helper.doLogin(helper.testUsers[0].email, helper.testUsers[0].password)).token
 
     await api
-        .delete('/api/users')
-        .set({ 'Authorization': `bearer ${userToken}` })
-        .send({
-          id: helper.testUsers[0].id
-        })
-        .expect(204)
+      .delete('/api/users')
+      .set({ 'Authorization': `bearer ${userToken}` })
+      .send({
+        id: helper.testUsers[0].id
+      })
+      .expect(204)
 
     const finalUsers = await helper.usersInDb()
     expect(finalUsers).toHaveLength(initialUsers.length - 1)
@@ -266,12 +266,12 @@ describe('Deleting users', () => {
     const initialUsers = await helper.usersInDb()
 
     await api
-        .delete('/api/users')
-        .set({ 'Authorization': `bearer invalid` })
-        .send({
-          id: helper.testUsers[0].id
-        })
-        .expect(401)
+      .delete('/api/users')
+      .set({ 'Authorization': 'bearer invalid' })
+      .send({
+        id: helper.testUsers[0].id
+      })
+      .expect(401)
 
     const finalUsers = await helper.usersInDb()
     expect(finalUsers).toHaveLength(initialUsers.length)
