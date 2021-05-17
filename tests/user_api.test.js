@@ -181,6 +181,34 @@ describe('Modifying users', () => {
     expect(finalUsers).toHaveLength(initialUsers.length)
     expect(finalUsers.filter(user => user.email === newEmail))
   })
+
+  /**
+   * Tests modifying a user with a valid token
+   */
+  test('modification fails with valid token and invalid email', async () => {
+    const initialUsers = await helper.usersInDb()
+    const userToken = (await helper.doLogin(helper.testUsers[0].email, helper.testUsers[0].password)).token
+    const newEmail = helper.testUsers[1].email
+
+    const updatedUser = {
+      first_name: helper.testUsers[0].first_name,
+      last_name: helper.testUsers[0].last_name,
+      email: newEmail,
+      id: helper.testUsers[0].id,
+      password: helper.testUsers[0].password,
+      age: helper.testUsers[0].age
+    }
+
+    await api
+        .put('/api/users')
+        .set({ 'Authorization': `bearer ${userToken}` })
+        .send(updatedUser)
+        .expect(400)
+
+    const finalUsers = await helper.usersInDb()
+    expect(finalUsers).toHaveLength(initialUsers.length)
+    expect(!finalUsers.filter(user => user.email === newEmail))
+  })
 })
 
 afterAll(async () => {
