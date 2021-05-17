@@ -1,5 +1,5 @@
 /**
- * Controller taking care of all login operations
+ * Helper functions for the test suites
  *
  * @version 2021-05-15
  * @author Otavio Sartorelli de Toledo Piza
@@ -49,7 +49,7 @@ const usersInDb = async () => {
 }
 
 /**
- * Logs a user in
+ * Logs a user in returning the body of the server's response
  *
  * @param email email of the user
  * @param password password of the user

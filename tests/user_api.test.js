@@ -1,5 +1,5 @@
 /**
- * Controller taking care of all login operations
+ * Test suite for user related operations and routes
  *
  * @version 2021-05-15
  * @author Otavio Sartorelli de Toledo Piza
